@@ -1,20 +1,30 @@
 <?php 
 
-$pythonServerURL = "http://127.0.0.1:5000/geocode";
+class AddressDao {
 
-$address = "Av. Cristiano Machado, 11833 - Vila Cloris, Belo Horizonte - MG, 31744-007";
 
-$pythonResponse =  file_get_contents("$pythonServerURL?address=".urlencode($address));
+   public $passengerAddress = "Av. Cristiano Machado, 11833 - Vila Cloris, Belo Horizonte - MG, 31744-007"; 
 
-$dadosLocalizacao = json_decode($pythonResponse, true);
+   public function getLatitudeLongetude($passengerAddress){
+        
+        $pythonServerURL = "http://127.0.0.1:5000/geocode";
 
-if($dadosLocalizacao && isset($dadosLocalizacao['latitude'], $dadosLocalizacao['longitude'])){
+        $address = $passengerAddress; //"Av. Cristiano Machado, 11833 - Vila Cloris, Belo Horizonte - MG, 31744-007";
 
-    $latitude =  $dadosLocalizacao['latitude'];
-    $longitude = $dadosLocalizacao['longitude'];
+        $pythonResponse =  file_get_contents("$pythonServerURL?address=".urlencode($address));
 
-    echo "Latitude: $latitude, Longitude $longitude";
-} else {
-    echo "Não foi possivel obter informações da localização do servidor Python";
+        $dadosLocalizacao = json_decode($pythonResponse, true);
+
+        if($dadosLocalizacao && isset($dadosLocalizacao['latitude'], $dadosLocalizacao['longitude'])){
+
+            $latitude =  $dadosLocalizacao['latitude'];
+            $longitude = $dadosLocalizacao['longitude'];
+
+            echo "Latitude: $latitude, Longitude $longitude";
+        } else {
+            echo "Não foi possivel obter informações da localização do servidor Python";
+        }
+    }
+
+
 }
-
