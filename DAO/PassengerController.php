@@ -1,14 +1,9 @@
 <?php 
     require_once('../Model/PassengerDAO.php');
 
-    class PassengerController{
+    class PassengerController extends PassengerDAO{
 
-       public $passengerName = 'cleber';
-       public $passengerAddress = 'rua treze';
-       public $latitude = '12345678945';
-       public $longitude = '12345678954';
-        
-        public function insertIntoDatabase() {
+        public function insertIntoDatabase($obj){
         // Conectar ao banco de dados (ajuste conforme suas configurações)
         $conexao = new mysqli("localhost", "root", "", "BestRoute");
         
@@ -27,7 +22,7 @@
         }
 
         // Vincular os parâmetros à consulta
-        $stmt->bind_param("ssdd", $this->passengerName, $this->passengerAddress, $this->latitude, $this->longitude);
+        $stmt->bind_param("ssdd", $this->getPassengerName(), $this->getPassengerAddress(), $this->getLatitude(), $this->getLongitude());
 
         // Executar a consulta
         if (!$stmt->execute()) {
@@ -38,7 +33,32 @@
         $stmt->close();
         $conexao->close();
     }
+
+    public function deletePassenger($passengerID){
+
+        $conexao = new mysqli("localhost", "root", "", "BestRoute");
+
+        if($conexao->connect_error){
+            die("Falha na conexão com o banco de daods: " . $conexao->connect_error);
+        }
+
+        $sql = "DELETE FROM passenger WHERE PassengerID = $passengerID";
+        $stmt = $conexao->prepare($sql);
+
+        if(!$stmt->execute()){
+            die("Falha ao preparar a consultar SQL:" . $conexao->error);
+        }
+
+        $stmt->close();
+        $conexao->close();
+    }
+
+    
 }
 
-$object = new PassengerController();
-$object->insertIntoDatabase();
+$obj = new PassengerDAO('Cleber', 'Av. Cristiano Machado, 11833 - Vila Cloris, Belo Horizonte - MG, 31744-007');
+
+print_r($obj);
+
+$insert = new PassengerController($obj->getPassengerName(), $obj->getPassengerAddress(), $obj->getLatitude(), $obj->getLongitude());
+$insert->deletePassenger(3);
