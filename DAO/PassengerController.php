@@ -53,12 +53,16 @@
         $conexao->close();
     }
 
-    
+
 }
 
-$obj = new PassengerDAO('Cleber', 'Av. Cristiano Machado, 11833 - Vila Cloris, Belo Horizonte - MG, 31744-007');
 
-print_r($obj);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-$insert = new PassengerController($obj->getPassengerName(), $obj->getPassengerAddress(), $obj->getLatitude(), $obj->getLongitude());
-$insert->deletePassenger(3);
+    $passengerName = $_POST['passengerName'];
+    $passengerAddress = $_POST['passengerAddress'];
+
+    $passengerController = new PassengerController($passengerName, $passengerAddress);
+
+    $passengerController->insertIntoDatabase($passengerName, $passengerAddress);
+}
