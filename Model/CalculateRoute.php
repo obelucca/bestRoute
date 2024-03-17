@@ -2,7 +2,7 @@
 
 require_once('../config/database.php');
 
-class Rota {
+class CalculateRoute {
     private $db;
 
     public function __construct($db) {
@@ -100,16 +100,15 @@ class Rota {
 }
 
 // Configurações do banco de dados
-$db_host = 'seu_host';
-$db_usuario = 'seu_usuario';
-$db_senha = 'sua_senha';
-$db_nome = 'seu_banco_de_dados';
-
-// Conectar ao banco de dados
+$db_host = 'localhost';
+$db_usuario = 'root';
+$db_senha = '';
+$db_nome = 'bestRoute';
+//instanciando classe de conexão com BD
 $db = new Database($db_host, $db_usuario, $db_senha, $db_nome);
 
-// Inicializar a classe Rota
-$rota = new Rota($db);
+//instancia da classe de calculo da rota
+$rota = new CalculateRoute($db);
 
 // Definir o ponto de partida e chegada (ids dos pontos no banco de dados)
 $pontoPartida = 1; // Id do ponto de partida
@@ -120,4 +119,3 @@ $menorRota = $rota->calcularMenorRota($pontoPartida, $pontoChegada);
 
 // Imprimir a menor rota
 echo "Menor rota: " . implode(" -> ", $menorRota);
-?>
