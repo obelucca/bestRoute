@@ -3,7 +3,7 @@
 
     class PassengerController extends PassengerDAO{
 
-        public function insertIntoDatabase($obj){
+        public function insertIntoDatabase(){
         // Conectar ao banco de dados (ajuste conforme suas configurações)
         $conexao = new mysqli("localhost", "root", "", "BestRoute");
         
@@ -21,8 +21,14 @@
             die("Falha ao preparar a consulta SQL: " . $conexao->error);
         }
 
+        $passengerName  = $this->getPassengerName();
+        $passengerAddress = $this->getPassengerAddress();
+        $passengerLatitude = $this->getLatitude();
+        $passengerLongitude = $this->getLongitude();
+
+
         // Vincular os parâmetros à consulta
-        $stmt->bind_param("ssdd", $this->getPassengerName(), $this->getPassengerAddress(), $this->getLatitude(), $this->getLongitude());
+        $stmt->bind_param("ssdd", $passengerName, $passengerAddress, $passengerLatitude, $passengerLongitude);
 
         // Executar a consulta
         if (!$stmt->execute()) {
@@ -32,6 +38,10 @@
         // Fechar a declaração e a conexão
         $stmt->close();
         $conexao->close();
+
+        header( 'Location: ../view/index.php');
+        exit;
+
     }
 
     public function deletePassenger($passengerID){
@@ -53,6 +63,41 @@
         $conexao->close();
     }
 
+    public function getPassengers() {
+        // Conectar ao banco de dados
+        $conexao = new mysqli("localhost", "root", "", "BestRoute");
+    
+        // Verificar a conexão
+        if ($conexao->connect_error) {
+            die("Falha na conexão com o banco de dados: " . $conexao->connect_error);
+        }
+    
+        // Consulta SQL para selecionar todos os passageiros
+        $sql = "SELECT * FROM passenger";
+    
+        // Preparar e executar a consulta
+        $result = $conexao->query($sql);
+    
+        // Verificar se a consulta retornou resultados
+        if ($result->num_rows > 0) {
+            // Array para armazenar os passageiros
+            $passengers = array();
+    
+            // Loop através dos resultados e armazenar em um array
+            while ($row = $result->fetch_assoc()) {
+                $passengers[] = $row;
+            }
+    
+            // Fechar a conexão e retornar os passageiros
+            $conexao->close();
+            return $passengers;
+        } else {
+            // Se não houver passageiros cadastrados, retornar um array vazio
+            $conexao->close();
+            return array();
+        }
+    }
+    
 
 }
 
@@ -64,5 +109,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $passengerController = new PassengerController($passengerName, $passengerAddress);
 
-    $passengerController->insertIntoDatabase($passengerName, $passengerAddress);
+    $passengerController->insertIntoDatabase();
 }

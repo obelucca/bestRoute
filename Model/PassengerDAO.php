@@ -1,7 +1,4 @@
 <?php
-
-require_once('AddressDAO.php');
-
 class PassengerDAO{
 
     private $passengerID;

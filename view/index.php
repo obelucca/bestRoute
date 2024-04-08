@@ -14,6 +14,24 @@
         <input type="text" id="passengerAddress" name="passengerAddress"><br>
         
         <button type="submit">Adicionar Passageiro</button>
+        <p>
+        <?php
+            require_once('../DAO/PassengerController.php');
+
+           $passengerController = new PassengerController();
+           $passengers = $passengerController->getPassengers();
+           
+           // Exibir os passageiros na página
+           foreach ($passengers as $passenger) {
+               echo "ID: " . $passenger['PassengerID'] . "<br>";
+               echo "Nome: " . $passenger['passengerName'] . "<br>";
+               echo "Endereço: " . $passenger['address'] . "<br>";
+               echo "<hr>";
+           }
+
+           
+        ?>
+        </p>
 </body>
 </html>
 
