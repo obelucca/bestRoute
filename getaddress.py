@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
-from geopy.geocoders import Nominatim
+from geopy.geocoders import GoogleV3
 
 app = Flask(__name__)
-geolocator = Nominatim(user_agent="BestRoute")
+geolocator = GoogleV3(api_key='')
 
 @app.route('/geocode', methods=['GET'])
 
